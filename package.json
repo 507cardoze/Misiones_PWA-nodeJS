@@ -1,0 +1,37 @@
+{
+  "name": "misiones_pwa-nodejs",
+  "version": "1.0.0",
+  "description": "Reingenieria de sistema de misiones del servicio nacional aeronaval integrando el CROAN , Estadistica , Grupo Aereo y Mantenimiento Aereo",
+  "main": "server.js",
+  "scripts": {
+    "client-install": "cd client && npm install",
+    "start": "node server.js",
+    "server": "nodemon server.js",
+    "client": "npm start --prefix client",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/507cardoze/Misiones_PWA-nodeJS.git"
+  },
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "concurrently": "^5.3.0",
+    "cors": "^2.8.5",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "humanize-duration": "^3.25.1",
+    "knex": "^0.20.4",
+    "moment": "^2.29.1",
+    "mysql": "^2.17.1"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.7"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/507cardoze/Misiones_PWA-nodeJS/issues"
+  },
+  "homepage": "https://github.com/507cardoze/Misiones_PWA-nodeJS#readme"
+}
