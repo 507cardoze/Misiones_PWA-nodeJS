@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useContext } from "react";
 import {
   Button,
   TextField,
@@ -10,76 +10,61 @@ import {
 import { makeStyles } from "@material-ui/core/styles";
 import { Redirect, useHistory } from "react-router-dom";
 import { Helmet } from "react-helmet";
-import Background from "../../assets/panama-aw139-520.jpg";
-import Background2 from "../../assets/depositphotos_64414801-stock-photo-us-air-force-digital-tigerstripe.jpg";
+import styles from "./styles";
+import BackdropSpinner from "../../components/BackDrop/backDrop";
+import { errorToast, msgWarn } from "../../functions/utils/utils";
+import { loginUser, getUserData } from "../../functions/fetch/fetch";
+import { UserContext } from "../../context/user/UserContext";
 
 function Login() {
-  const useStyles = makeStyles((theme) => ({
-    root: {
-      minHeight: "100vh",
-    },
-    image: {
-      backgroundImage: `url(${Background})`,
-      backgroundRepeat: "no-repeat",
-      backgroundColor:
-        theme.palette.type === "light"
-          ? theme.palette.grey[50]
-          : theme.palette.grey[900],
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    },
-    image2: {
-      backgroundImage: `url(${Background2})`,
-      backgroundRepeat: "no-repeat",
-      backgroundColor:
-        theme.palette.type === "light"
-          ? theme.palette.grey[50]
-          : theme.palette.grey[900],
-      backgroundSize: "cover",
-      backgroundPosition: "center",
-    },
-    paper: {
-      margin: theme.spacing(15, 4),
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      justifyContent: "center",
-    },
-    form: {
-      width: "100%", // Fix IE 11 issue.
-      marginTop: theme.spacing(4),
-    },
-    submit: {
-      backgroundColor: theme.palette.primary.main,
-      margin: theme.spacing(3, 0, 2),
-      fontWeight: "bold",
-    },
-    backdrop: {
-      zIndex: theme.zIndex.drawer + 1,
-      color: "#fff",
-    },
-    inputs: {
-      backgroundColor:
-        theme.palette.type === "light"
-          ? theme.palette.grey[50]
-          : theme.palette.grey[900],
-    },
-  }));
+  const useStyles = makeStyles((theme) => styles(theme));
   const classes = useStyles();
+  const [Cedula, setCedula] = useState("");
+  const [Password, setPassword] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
+  const [user, setUser] = useContext(UserContext);
+  const history = useHistory();
+  const handleOnChangeCedula = (e) => setCedula(e.target.value);
+  const handleOnChangePassword = (e) => setPassword(e.target.value);
+  const handleOnSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    if (user !== null) {
+      setUser(null);
+    }
+
+    try {
+      const query = await loginUser(Cedula, Password);
+      if (query.accessToken) {
+        const user = await getUserData(query.accessToken, 2);
+        console.log(user);
+        if (user[0].id_app === 2 && user[0].estado === 1) {
+          localStorage.setItem("token", query.accessToken);
+          setUser(user[0]);
+          history.push("/");
+        } else {
+          errorToast(
+            "Usuario no tiene acceso a esta aplicacion, contacte al administrador.",
+          );
+        }
+      } else {
+        errorToast(query);
+      }
+    } catch (error) {
+      msgWarn(`ERROR: ${error}`);
+    }
+
+    setIsLoading(false);
+  };
+
   return (
     <Grid container component="main" className={classes.root}>
+      <BackdropSpinner isLoading={!isLoading} />
+      {localStorage.token && <Redirect to="/" />}
       <Helmet title="Iniciar sesión" />
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
-      <Grid
-        item
-        xs={12}
-        sm={8}
-        md={5}
-        component={Paper}
-        className={classes.image2}
-        elevation={6}
-        square
-      >
+      <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
           <Typography
             component="h1"
@@ -88,15 +73,15 @@ function Login() {
           >
             Misiones Aeronavales
           </Typography>
-          <form className={classes.form}>
+          <form className={classes.form} onSubmit={handleOnSubmit}>
             <TextField
               variant="outlined"
               margin="normal"
               fullWidth
               label="Cedula"
               autoComplete="cedula"
-              //   value={username}
-              //   onChange={(e) => setUserName(e.target.value)}
+              value={Cedula}
+              onChange={handleOnChangeCedula}
               autoFocus
               name="cedula"
               className={classes.inputs}
@@ -108,11 +93,10 @@ function Login() {
               label="Contraseña"
               type="password"
               autoComplete="current-password"
-              //   value={password}
+              value={Password}
               name="password"
               className={classes.inputs}
-
-              //onChange={(e) => setPassword(e.target.value)}
+              onChange={handleOnChangePassword}
             />
             <Button
               type="submit"

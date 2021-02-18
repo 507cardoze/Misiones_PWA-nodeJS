@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core";
 import NavBar from "./NavBar";
 import TopBar from "./TopBar";
+import { Helmet } from "react-helmet";
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -33,11 +34,13 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const DashboardLayout = (props) => {
+  const { children, title } = props;
   const classes = useStyles();
   const [isMobileNavOpen, setMobileNavOpen] = useState(false);
 
   return (
     <div className={classes.root}>
+      <Helmet title={title} />
       <TopBar onMobileNavOpen={() => setMobileNavOpen(true)} />
       <NavBar
         onMobileClose={() => setMobileNavOpen(false)}
@@ -45,7 +48,7 @@ const DashboardLayout = (props) => {
       />
       <div className={classes.wrapper}>
         <div className={classes.contentContainer}>
-          <div className={classes.content}>{props.children}</div>
+          <div className={classes.content}>{children}</div>
         </div>
       </div>
     </div>
