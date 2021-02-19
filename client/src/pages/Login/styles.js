@@ -1,4 +1,5 @@
-import Background from "../../assets/panama-aw139-520.jpg";
+//import Background from "../../assets/panama-aw139-520.jpg";
+import Background from "../../assets/depositphotos_64414801-stock-photo-us-air-force-digital-tigerstripe.jpg";
 
 const styles = (theme) => ({
   root: {
@@ -13,9 +14,19 @@ const styles = (theme) => ({
         : theme.palette.grey[900],
     backgroundSize: "cover",
     backgroundPosition: "center",
+    opacity: 0.8,
+  },
+  logo: {
+    width: "3rem",
+    marginBottom: "1rem",
+  },
+  logoLabel: {
+    fontFamily: "Audiowide",
+    fontWeight: "cursive",
+    fontSize: "1.4rem",
   },
   paper: {
-    margin: theme.spacing(15, 4),
+    margin: theme.spacing(12, 6),
     display: "flex",
     flexDirection: "column",
     alignItems: "center",

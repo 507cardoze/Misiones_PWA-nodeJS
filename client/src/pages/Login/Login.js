@@ -15,6 +15,7 @@ import BackdropSpinner from "../../components/BackDrop/backDrop";
 import { errorToast, msgWarn } from "../../functions/utils/utils";
 import { loginUser, getUserData } from "../../functions/fetch/fetch";
 import { UserContext } from "../../context/user/UserContext";
+import logo from "../../assets/escudo_actual.png";
 
 function Login() {
   const useStyles = makeStyles((theme) => styles(theme));
@@ -66,11 +67,8 @@ function Login() {
       <Grid item xs={false} sm={4} md={7} className={classes.image} />
       <Grid item xs={12} sm={8} md={5} component={Paper} elevation={6} square>
         <div className={classes.paper}>
-          <Typography
-            component="h1"
-            variant="h2"
-            style={{ fontFamily: "Audiowide", fontWeight: "cursive" }}
-          >
+          <img alt="Logo" src={logo} className={classes.logo} />
+          <Typography component="h1" variant="h2" className={classes.logoLabel}>
             Misiones Aeronavales
           </Typography>
           <form className={classes.form} onSubmit={handleOnSubmit}>
